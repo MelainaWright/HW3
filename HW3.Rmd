@@ -1,0 +1,118 @@
+---
+title: "HW3"
+author: "MelainaWright"
+date: "May 17, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r loadpackage, results='hide', message=FALSE}
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(gridExtra)
+library(lubridate)
+library(RColorBrewer)
+
+```
+
+#Import Data
+```{r Import, echo=TRUE, eval=TRUE}
+
+thinshallow = read.table("resthin.shallow.txt", header=T)
+thindeep = read.table("resthin.deep.txt", header=T)
+clim=read.table("sierraclim.txt",header=T)
+
+
+# Using the 3 data sets provided (thindeep, thinshallow, clim) use ggplot to generate 4 different graphs - that demonstrate the use of ggplot
+# 
+# include in your graphs, changing potting colors and shapes, annotation, summarizing the data, different plot types, and the use of facet 
+# 
+# summarize as an R-markdown file that you submit on github and simply include the link here on gauchspace when you have completed the assignment
+
+```
+
+#Graph 1
+##Changing plot colors and shapes, summarizing the data, scatterplot
+```{r Graph1, echo=TRUE, eval=TRUE}
+
+
+Graph1 = ggplot(thindeep, aes(x=month, y=trans)) +
+  stat_summary(fun.y="mean", geom="point", col="plum", shape=6, size=5) +
+  scale_x_continuous(breaks=seq(0,12,1)) +
+  labs(y="Mean Transpiration Rate (mls/min)", x="Month") +
+  ggtitle("Mean Transpiration Rate by Month") +
+  theme(axis.text= element_text(face="italic", colour="lightseagreen", size=10)) +
+  theme(plot.title = element_text(face="bold", colour="lightpink2", size=20)) +
+  theme(axis.title = element_text(face="bold", colour="lightblue", size=15))
+Graph1
+
+
+```
+
+
+#Graph 2
+##Annotation, summarizing the data, bar graph
+```{r Graph2, echo=TRUE, eval=TRUE}
+
+Graph2 = ggplot(thinshallow) +
+  geom_bar(aes(x=as.factor(month), y=trans), stat="summary", fun.y="mean", fill="navy") +
+  labs(x="Month", y="Mean Transpiration Rate (mls/min)") +
+  annotate("text", x=5, y= 2.2, label="May", colour="tomato", size=6)
+Graph2
+
+
+```
+
+
+#Graph 3
+##Facets, line graph
+```{r Graph3, echo=TRUE, eval=TRUE}
+#lets say we wanted a separate graph for each thinning intensity so we could see how decade impacted recovery
+
+
+Graph3 = ggplot(clim, aes(x=year, y=rain)) +
+  stat_summary(fun.y="sum", geom="line") +
+  facet_wrap(~as.factor(month)) +
+  labs(y="Total RainFall (mls/min)", x="Year") +
+  ggtitle("Trends in Monthly RainFall Through Time (January=1)")
+Graph3
+
+
+```
+
+
+#Graph 4
+##Line graph, summarizing the data, working with color brewer
+```{r Graph4, echo=TRUE, eval=TRUE}
+
+Graph4=ggplot(thinshallow, aes(x=scen, y=plantc), col.as.factor(month)) +
+  stat_summary(fun.y="median", geom="line", aes(col=as.factor(month))) +
+  scale_color_brewer(type="qual", palette="Paired", name="Month") +
+  theme(legend.position="right") +
+  labs(x="Decade", y="Median Plant Carbon Flux") +
+  ggtitle("Median Plant Carbon Flux by Month from 1950-1980")
+Graph4
+
+```
+
+
+#Extra Credit
+```{r EC, echo=TRUE, eval=TRUE}
+# see if you can combine the different data sets in some way using dplyr tools
+
+#combined thinshallow and thindeep data sets
+thindata <- merge(thindeep, thinshallow, all=TRUE)
+
+
+names(thindata)[names(thindata)=="scen"] <- "year"
+
+gc()
+combinedData <- thindata %>% left_join(clim, by = "year") #need more memory on my computer to combine the thindata and clim datasets
+
+
+```
