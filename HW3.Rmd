@@ -27,19 +27,11 @@ thinshallow = read.table("resthin.shallow.txt", header=T)
 thindeep = read.table("resthin.deep.txt", header=T)
 clim=read.table("sierraclim.txt",header=T)
 
-
-# Using the 3 data sets provided (thindeep, thinshallow, clim) use ggplot to generate 4 different graphs - that demonstrate the use of ggplot
-# 
-# include in your graphs, changing potting colors and shapes, annotation, summarizing the data, different plot types, and the use of facet 
-# 
-# summarize as an R-markdown file that you submit on github and simply include the link here on gauchspace when you have completed the assignment
-
 ```
 
 #Graph 1
-##Changing plot colors and shapes, summarizing the data, scatterplot
+##Scatterplot, changing plot colors and shapes, summarizing the data
 ```{r Graph1, echo=TRUE, eval=TRUE}
-
 
 Graph1 = ggplot(thindeep, aes(x=month, y=trans)) +
   stat_summary(fun.y="mean", geom="point", col="plum", shape=6, size=5) +
@@ -51,29 +43,26 @@ Graph1 = ggplot(thindeep, aes(x=month, y=trans)) +
   theme(axis.title = element_text(face="bold", colour="lightblue", size=15))
 Graph1
 
-
 ```
 
 
 #Graph 2
-##Annotation, summarizing the data, bar graph
+##Bar Graph, annotation, summarizing the data
 ```{r Graph2, echo=TRUE, eval=TRUE}
 
 Graph2 = ggplot(thinshallow) +
   geom_bar(aes(x=as.factor(month), y=trans), stat="summary", fun.y="mean", fill="navy") +
   labs(x="Month", y="Mean Transpiration Rate (mls/min)") +
-  annotate("text", x=5, y= 2.2, label="May", colour="tomato", size=6)
+  ggtitle("Mean Transpiration Rate by Month") +
+  annotate("text", x=5, y= 2.18, label="Maximum Value=2.15", colour="tomato", size=4)
 Graph2
-
 
 ```
 
 
 #Graph 3
-##Facets, line graph
+##Line graph, facet, summarizing the data
 ```{r Graph3, echo=TRUE, eval=TRUE}
-#lets say we wanted a separate graph for each thinning intensity so we could see how decade impacted recovery
-
 
 Graph3 = ggplot(clim, aes(x=year, y=rain)) +
   stat_summary(fun.y="sum", geom="line") +
@@ -82,12 +71,11 @@ Graph3 = ggplot(clim, aes(x=year, y=rain)) +
   ggtitle("Trends in Monthly RainFall Through Time (January=1)")
 Graph3
 
-
 ```
 
 
 #Graph 4
-##Line graph, summarizing the data, working with color brewer
+##Line graph, color brewer, summarizing the data
 ```{r Graph4, echo=TRUE, eval=TRUE}
 
 Graph4=ggplot(thinshallow, aes(x=scen, y=plantc), col.as.factor(month)) +
