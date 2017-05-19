@@ -78,7 +78,7 @@ Graph3
 ##Line graph, color brewer, summarizing the data
 ```{r Graph4, echo=TRUE, eval=TRUE}
 
-Graph4=ggplot(thinshallow, aes(x=scen, y=plantc), col.as.factor(month)) +
+Graph4=ggplot(thinshallow, aes(x=scen, y=plantc), col=as.factor(month)) +
   stat_summary(fun.y="median", geom="line", aes(col=as.factor(month))) +
   scale_color_brewer(type="qual", palette="Paired", name="Month") +
   theme(legend.position="right") +
@@ -99,8 +99,8 @@ thindata <- merge(thindeep, thinshallow, all=TRUE)
 
 names(thindata)[names(thindata)=="scen"] <- "year"
 
-gc()
-combinedData <- thindata %>% left_join(clim, by = "year") #need more memory on my computer to combine the thindata and clim datasets
+# gc()
+# combinedData <- thindata %>% left_join(clim, by = "year") #need more memory on my computer to combine the thindata and clim datasets
 
 
 ```
